@@ -393,6 +393,12 @@ class VConsoleLogTab extends VConsolePlugin {
       }
     }
 
+    //移除api相关封装外壳
+    if (logs[0].indexOf('■') == 2) {
+      let origin = JSON.parse(logs[0]);
+      logs[0] = origin['■'];
+    }
+
     // make for previous log
     const curLog = {
       _id: item._id,

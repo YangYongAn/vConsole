@@ -41,6 +41,11 @@ class VConsoleStorageTab extends VConsolePlugin {
   onAddTopBar(callback) {
     let that = this;
     let types = ['Cookies', 'LocalStorage', 'SessionStorage'];
+
+    if (tool.isAC()) {
+      types.push('Prefs')
+    }
+
     let btnList = [];
     for (let i = 0; i < types.length; i++) {
       btnList.push({
@@ -49,7 +54,7 @@ class VConsoleStorageTab extends VConsolePlugin {
           type: types[i].toLowerCase()
         },
         className: '',
-        onClick: function() {
+        onClick: function () {
           if (!$.hasClass(this, 'vc-actived')) {
             that.currentType = this.dataset.type;
             that.renderStorage();
@@ -68,13 +73,13 @@ class VConsoleStorageTab extends VConsolePlugin {
     let toolList = [{
       name: 'Refresh',
       global: false,
-      onClick: function(e) {
+      onClick: function (e) {
         that.renderStorage();
       }
     }, {
       name: 'Clear',
       global: false,
-      onClick: function(e) {
+      onClick: function (e) {
         that.clearLog();
       }
     }];
@@ -129,6 +134,9 @@ class VConsoleStorageTab extends VConsolePlugin {
       case 'sessionstorage':
         list = this.getSessionStorageList();
         break;
+      case 'Prefs':
+        list = this.getPrefsList();
+        break;
       default:
         return false;
     }
@@ -138,7 +146,7 @@ class VConsoleStorageTab extends VConsolePlugin {
       $log.innerHTML = '';
     } else {
       // html encode for rendering
-      for (let i=0; i<list.length; i++) {
+      for (let i = 0; i < list.length; i++) {
         list[i].name = tool.htmlEncode(list[i].name);
         list[i].value = tool.htmlEncode(list[i].value);
       }
@@ -153,14 +161,14 @@ class VConsoleStorageTab extends VConsolePlugin {
 
     let list = [];
     let items = document.cookie.split(';');
-    for (let i=0; i<items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
       let item = items[i].split('=');
       let name = item.shift().replace(/^ /, ''),
-          value = item.join('=');
+        value = item.join('=');
       try {
         name = decodeURIComponent(name);
         value = decodeURIComponent(value);
-      } catch(e) {
+      } catch (e) {
         console.log(e, name, value);
       }
       list.push({
@@ -180,7 +188,7 @@ class VConsoleStorageTab extends VConsolePlugin {
       let list = []
       for (var i = 0; i < localStorage.length; i++) {
         let name = localStorage.key(i),
-            value = localStorage.getItem(name);
+          value = localStorage.getItem(name);
         list.push({
           name: name,
           value: value
@@ -191,6 +199,7 @@ class VConsoleStorageTab extends VConsolePlugin {
       return [];
     }
   }
+
 
   getSessionStorageList() {
     if (!window.sessionStorage) {
@@ -201,7 +210,7 @@ class VConsoleStorageTab extends VConsolePlugin {
       let list = []
       for (var i = 0; i < sessionStorage.length; i++) {
         let name = sessionStorage.key(i),
-            value = sessionStorage.getItem(name);
+          value = sessionStorage.getItem(name);
         list.push({
           name: name,
           value: value
@@ -213,13 +222,21 @@ class VConsoleStorageTab extends VConsolePlugin {
     }
   }
 
+
+  getPrefsList() {
+    api.toast({
+      msg: '暂无获取所有偏好数据的接口'
+    })
+  }
+
+
   clearCookieList() {
     if (!document.cookie || !navigator.cookieEnabled) {
       return;
     }
     let hostname = window.location.hostname;
     let list = this.getCookieList();
-    for (var i=0; i<list.length; i++) {
+    for (var i = 0; i < list.length; i++) {
       let name = list[i].name;
       document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
       document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
@@ -238,6 +255,7 @@ class VConsoleStorageTab extends VConsolePlugin {
       }
     }
   }
+
   clearSessionStorageList() {
     if (!!window.sessionStorage) {
       try {
