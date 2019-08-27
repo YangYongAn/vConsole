@@ -19,15 +19,17 @@ Unless required by applicable law or agreed to in writing, software distributed 
  * @return  object
  */
 export function getDate(time) {
-  let d = time>0 ? new Date(time) : new Date();
-  let day = d.getDate()<10 ? '0'+d.getDate() : d.getDate(),
-    month = d.getMonth()<9 ? '0'+(d.getMonth()+1) : (d.getMonth()+1),
+  let d = time > 0 ? new Date(time) : new Date();
+  let day = d.getDate() < 10 ? '0' + d.getDate() : d.getDate(),
+    month = d.getMonth() < 9 ? '0' + (d.getMonth() + 1) : (d.getMonth() + 1),
     year = d.getFullYear(),
-    hour = d.getHours()<10 ? '0'+d.getHours() : d.getHours(),
-    minute = d.getMinutes()<10 ? '0'+d.getMinutes() : d.getMinutes(),
-    second = d.getSeconds()<10 ? '0'+d.getSeconds() : d.getSeconds(),
-    millisecond = d.getMilliseconds()<10 ? '0'+d.getMilliseconds() : d.getMilliseconds();
-  if (millisecond<100) { millisecond = '0' + millisecond; }
+    hour = d.getHours() < 10 ? '0' + d.getHours() : d.getHours(),
+    minute = d.getMinutes() < 10 ? '0' + d.getMinutes() : d.getMinutes(),
+    second = d.getSeconds() < 10 ? '0' + d.getSeconds() : d.getSeconds(),
+    millisecond = d.getMilliseconds() < 10 ? '0' + d.getMilliseconds() : d.getMilliseconds();
+  if (millisecond < 100) {
+    millisecond = '0' + millisecond;
+  }
   return {
     time: (+d),
     year: year,
@@ -48,24 +50,31 @@ export function getDate(time) {
 export function isNumber(value) {
   return Object.prototype.toString.call(value) == '[object Number]';
 }
+
 export function isString(value) {
   return Object.prototype.toString.call(value) == '[object String]';
 }
+
 export function isArray(value) {
   return Object.prototype.toString.call(value) == '[object Array]';
 }
+
 export function isBoolean(value) {
   return Object.prototype.toString.call(value) == '[object Boolean]';
 }
+
 export function isUndefined(value) {
   return value === undefined;
 }
+
 export function isNull(value) {
   return value === null;
 }
+
 export function isSymbol(value) {
   return Object.prototype.toString.call(value) == '[object Symbol]';
 }
+
 export function isObject(value) {
   return (
     Object.prototype.toString.call(value) == '[object Object]'
@@ -83,15 +92,18 @@ export function isObject(value) {
     )
   );
 }
+
 export function isFunction(value) {
   return Object.prototype.toString.call(value) == '[object Function]';
 }
+
 export function isElement(value) {
   return (
     typeof HTMLElement === 'object' ? value instanceof HTMLElement : //DOM2
-      value && typeof value === "object" && value !== null && value.nodeType === 1 && typeof value.nodeName==="string"
+      value && typeof value === "object" && value !== null && value.nodeType === 1 && typeof value.nodeName === "string"
   );
 }
+
 export function isWindow(value) {
   var toString = Object.prototype.toString.call(value);
   return toString == '[object global]' || toString == '[object Window]' || toString == '[object DOMWindow]';
@@ -116,10 +128,10 @@ export function isPlainObject(obj) {
     return false;
   }
   let key;
-  for (key in obj) {}
+  for (key in obj) {
+  }
   return key === undefined || hasOwn.call(obj, key);
 }
-
 
 
 /**
@@ -128,7 +140,7 @@ export function isPlainObject(obj) {
  * @return string
  */
 export function htmlEncode(text) {
-  return document.createElement('a').appendChild( document.createTextNode(text) ).parentNode.innerHTML;
+  return document.createElement('a').appendChild(document.createTextNode(text)).parentNode.innerHTML;
 }
 
 /**
@@ -146,7 +158,7 @@ export function JSONStringify(stringObject) {
   }
   let str = prefix;
   const keys = getObjAllKeys(stringObject);
-  for (let i = 0; i < keys.length; i ++) {
+  for (let i = 0; i < keys.length; i++) {
     const key = keys[i];
     const value = stringObject[key];
     try {
@@ -213,10 +225,19 @@ export function setStorage(key, value) {
   key = 'vConsole_' + key;
   localStorage.setItem(key, value);
 }
+
 export function getStorage(key) {
   if (!window.localStorage) {
     return;
   }
   key = 'vConsole_' + key;
   return localStorage.getItem(key);
+}
+
+/**
+ * 判断是否在apicloud中
+ * @returns {boolean}
+ */
+export function isAC() {
+  return typeof api === "undefined" ? false : true;
 }

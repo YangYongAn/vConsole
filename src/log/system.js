@@ -14,6 +14,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
  */
 
 import VConsoleLogTab from './log.js';
+import * as tool from '../lib/tool.js';
 import tplTabbox from './tabbox_system.html';
 
 class VConsoleSystemTab extends VConsoleLogTab {
@@ -24,13 +25,39 @@ class VConsoleSystemTab extends VConsoleLogTab {
     this.allowUnformattedLog = false; // only logs begin with `[system]` can be displayed
   }
 
+
   onInit() {
     super.onInit();
-    this.printSystemInfo();
+
+    if (tool.isAC()) {
+      this.printApiInfo();
+    } else {
+      this.printSystemInfo();
+    }
+
+
   }
 
+
+  printApiInfo() {
+
+    let attr = ["appId", "appName", "appVersion", "systemType", "systemVersion", "version", "deviceId", "deviceToken", "deviceModel", "deviceName", "uiMode", "operator", "connectionType", "fullScreen", "screenWidth", "screenHeight", "winName", "winWidth", "winHeight", "frameName", "frameWidth", "frameHeight", "safeArea", "pageParam", "wgtParam", "appParam", "statusBarAppearance", "wgtRootDir", "fsDir", "cacheDir", "boxDir", "debug", "channel", "jailbreak"]
+
+    for (let i = 0; i < attr.length; i++) {
+
+      let item = {"logs": ["[system]", attr[i], ': ', api[attr[i]]], noOrigin: true};
+      if (typeof api[attr[i]] == 'object') {
+        item.logType = 'warn';
+      } else {
+        item.logType = 'info';
+      }
+      this.printLog(item)
+    }
+  }
+
+
   printSystemInfo() {
-  	// print system info
+    // print system info
     let ua = navigator.userAgent,
       logMsg = '';
 
@@ -39,12 +66,12 @@ class VConsoleSystemTab extends VConsoleLogTab {
       ipad = ua.match(/(ipad).*\s([\d_]+)/i),
       iphone = ua.match(/(iphone)\sos\s([\d_]+)/i),
       android = ua.match(/(android)\s([\d\.]+)/i);
-    
+
     logMsg = 'Unknown';
     if (android) {
       logMsg = 'Android ' + android[2];
     } else if (iphone) {
-      logMsg = 'iPhone, iOS ' + iphone[2].replace(/_/g,'.');
+      logMsg = 'iPhone, iOS ' + iphone[2].replace(/_/g, '.');
     } else if (ipad) {
       logMsg = 'iPad, iOS ' + ipad[2].replace(/_/g, '.');
     } else if (ipod) {
@@ -86,11 +113,11 @@ class VConsoleSystemTab extends VConsoleLogTab {
 
     // User Agent
     console.info('[system]', 'UA:', ua);
-    
+
 
     // performance related
     // use `setTimeout` to make sure all timing points are available
-    setTimeout(function() {
+    setTimeout(function () {
       let performance = window.performance || window.msPerformance || window.webkitPerformance;
 
       // timing
@@ -100,36 +127,36 @@ class VConsoleSystemTab extends VConsoleLogTab {
           console.info('[system]', 'navigationStart:', t.navigationStart);
         }
         if (t.navigationStart && t.domainLookupStart) {
-          console.info('[system]', 'navigation:', (t.domainLookupStart - t.navigationStart)+'ms');
+          console.info('[system]', 'navigation:', (t.domainLookupStart - t.navigationStart) + 'ms');
         }
         if (t.domainLookupEnd && t.domainLookupStart) {
-          console.info('[system]', 'dns:', (t.domainLookupEnd - t.domainLookupStart)+'ms');
+          console.info('[system]', 'dns:', (t.domainLookupEnd - t.domainLookupStart) + 'ms');
         }
         if (t.connectEnd && t.connectStart) {
           if (t.connectEnd && t.secureConnectionStart) {
-            console.info('[system]', 'tcp (ssl):', (t.connectEnd - t.connectStart)+'ms ('+(t.connectEnd - t.secureConnectionStart)+'ms)');
+            console.info('[system]', 'tcp (ssl):', (t.connectEnd - t.connectStart) + 'ms (' + (t.connectEnd - t.secureConnectionStart) + 'ms)');
           } else {
-            console.info('[system]', 'tcp:', (t.connectEnd - t.connectStart)+'ms');
+            console.info('[system]', 'tcp:', (t.connectEnd - t.connectStart) + 'ms');
           }
         }
         if (t.responseStart && t.requestStart) {
-          console.info('[system]', 'request:', (t.responseStart - t.requestStart)+'ms');
+          console.info('[system]', 'request:', (t.responseStart - t.requestStart) + 'ms');
         }
         if (t.responseEnd && t.responseStart) {
-          console.info('[system]', 'response:', (t.responseEnd - t.responseStart)+'ms');
+          console.info('[system]', 'response:', (t.responseEnd - t.responseStart) + 'ms');
         }
         if (t.domComplete && t.domLoading) {
           if (t.domContentLoadedEventStart && t.domLoading) {
-            console.info('[system]', 'domComplete (domLoaded):', (t.domComplete - t.domLoading)+'ms ('+(t.domContentLoadedEventStart - t.domLoading)+'ms)');
+            console.info('[system]', 'domComplete (domLoaded):', (t.domComplete - t.domLoading) + 'ms (' + (t.domContentLoadedEventStart - t.domLoading) + 'ms)');
           } else {
-            console.info('[system]', 'domComplete:', (t.domComplete - t.domLoading)+'ms');
+            console.info('[system]', 'domComplete:', (t.domComplete - t.domLoading) + 'ms');
           }
         }
         if (t.loadEventEnd && t.loadEventStart) {
-          console.info('[system]', 'loadEvent:', (t.loadEventEnd - t.loadEventStart)+'ms');
+          console.info('[system]', 'loadEvent:', (t.loadEventEnd - t.loadEventStart) + 'ms');
         }
         if (t.navigationStart && t.loadEventEnd) {
-          console.info('[system]', 'total (DOM):', (t.loadEventEnd - t.navigationStart)+'ms ('+(t.domComplete - t.navigationStart)+'ms)');
+          console.info('[system]', 'total (DOM):', (t.loadEventEnd - t.navigationStart) + 'ms (' + (t.domComplete - t.navigationStart) + 'ms)');
         }
       }
     }, 0);
