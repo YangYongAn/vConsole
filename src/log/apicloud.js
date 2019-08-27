@@ -1,5 +1,7 @@
+import * as tool from '../lib/tool.js';
+
 (function (window) {
-  function _log(args) {
+  function _log(args, type) {
     var log = {
       '■': [],
       W: api.winName,
@@ -15,7 +17,8 @@
       }
     }
 
-    return JSON.stringify(log)
+    return JSON.stringify(log);
+
   }
 
   /**
@@ -40,7 +43,7 @@
     console.warn(_log(arguments));
   }
 
-  window.L = window.log = log;
-  window.E = window.error = error;
-  window.W = window.warn = warn;
+  window.L = window.log = tool.isAC() ? log : console.log;
+  window.E = window.error = tool.isAC() ? error : console.error;
+  window.W = window.warn = tool.isAC() ? warn : console.warn;
 })(window)
