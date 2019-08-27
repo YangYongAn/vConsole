@@ -1,23 +1,28 @@
 import * as tool from '../lib/tool.js';
 
 (function (window) {
-  function _log(args, type) {
-    var log = {
-      '■': [],
-      W: api.winName,
-      F: api.frameName,
-      U: location.pathname.split('/html/')[1]
-    };
+  function _log(args) {
+    if (tool.isAC()) {
+      var log = {
+        '■': [],
+        W: tool.isAC() ? api.winName : '',
+        F: tool.isAC() ? api.frameName : '',
+        U: location.pathname.split('/html/')[1]
+      };
 
-    for (var i = 0; i < args.length; i++) {
-      if (typeof args[i] == 'object') {
-        log['■'][i] = JSON.stringify(args[i]);
-      } else {
-        log['■'][i] = args[i];
+      for (var i = 0; i < args.length; i++) {
+        if (typeof args[i] == 'object') {
+          log['■'][i] = JSON.stringify(args[i]);
+        } else {
+          log['■'][i] = args[i];
+        }
       }
-    }
 
-    return JSON.stringify(log);
+
+      return JSON.stringify(log)
+    } else {
+      return [{'■': args}];
+    }
 
   }
 
@@ -43,7 +48,7 @@ import * as tool from '../lib/tool.js';
     console.warn(_log(arguments));
   }
 
-  window.L = window.log = tool.isAC() ? log : console.log;
-  window.E = window.error = tool.isAC() ? error : console.error;
-  window.W = window.warn = tool.isAC() ? warn : console.warn;
+  window.L = window.log = log;
+  window.E = window.error = error;
+  window.W = window.warn = warn;
 })(window)
