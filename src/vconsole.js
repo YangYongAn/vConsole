@@ -15,7 +15,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 // global
 import './lib/symbol.js';
-import './log/apicloud.js'
+// import './log/apicloud.js'
 
 // classes
 import VConsole from './core/core.js';
