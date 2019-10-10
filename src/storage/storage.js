@@ -19,6 +19,7 @@ import tplList from './list.html';
 
 import * as tool from '../lib/tool.js';
 import $ from '../lib/query.js';
+import {getDate} from "../lib/tool";
 
 class VConsoleStorageTab extends VConsolePlugin {
 
@@ -32,6 +33,11 @@ class VConsoleStorageTab extends VConsolePlugin {
       'localstorage': 'LocalStorage',
       'sessionstorage': 'SessionStorage'
     }
+
+    if (tool.isAC()) {
+      this.typeNameMap['prefs'] = 'Prefs'
+    }
+
   }
 
   onRenderTab(callback) {
@@ -134,7 +140,7 @@ class VConsoleStorageTab extends VConsolePlugin {
       case 'sessionstorage':
         list = this.getSessionStorageList();
         break;
-      case 'Prefs':
+      case 'prefs':
         list = this.getPrefsList();
         break;
       default:
@@ -148,7 +154,10 @@ class VConsoleStorageTab extends VConsolePlugin {
       // html encode for rendering
       for (let i = 0; i < list.length; i++) {
         list[i].name = tool.htmlEncode(list[i].name);
-        list[i].value = tool.htmlEncode(list[i].value);
+        list[i].value = tool.htmlEncode('[' + typeof list[i].value + ']' + JSON.stringify(list[i].value));
+        if (list[i].expires) {
+          list[i].expires = tool.htmlEncode(list[i].expires);
+        }
       }
       $log.innerHTML = $.render(tplList, {list: list}, true);
     }
@@ -224,9 +233,55 @@ class VConsoleStorageTab extends VConsolePlugin {
 
 
   getPrefsList() {
-    api.toast({
-      msg: '暂无获取所有偏好数据的接口'
-    })
+    try {
+      let list = [];
+
+      //同步返回结果：
+      var _dataList = api.getPrefs({
+        sync: true,
+        key: '_dataList'
+      });
+
+      if (_dataList) {
+        _dataList = JSON.parse(_dataList)
+
+
+        for (var i = 0; i < _dataList.length; i++) {
+          let name = _dataList[i];
+
+
+          let _ret = api.getPrefs({sync: true, key: name});
+          try {
+            _ret = JSON.parse(_ret);
+
+
+            list.push({
+              name: name,
+              value: _ret._value,
+              expires: new Date(_ret._expires).toLocaleString()
+            });
+
+          } catch (e) {//如果不能解析为对象 说明可能是原始方式设置的数据
+
+
+            list.push({
+              name: name,
+              value: _ret,
+              expires: '原生设定'
+            });
+
+          }
+
+
+        }
+
+      }
+
+
+      return list;
+    } catch (e) {
+      return [];
+    }
   }
 
 
