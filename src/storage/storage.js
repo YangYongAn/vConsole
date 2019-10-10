@@ -49,7 +49,7 @@ class VConsoleStorageTab extends VConsolePlugin {
     let types = ['Cookies', 'LocalStorage', 'SessionStorage'];
 
     if (tool.isAC()) {
-      types.push('Prefs')
+      types.unshift('Prefs')
     }
 
     let btnList = [];
@@ -99,7 +99,7 @@ class VConsoleStorageTab extends VConsolePlugin {
   onShow() {
     // show default panel
     if (this.currentType == '') {
-      this.currentType = 'cookies';
+      this.currentType = 'prefs';
       this.renderStorage();
     }
   }
