@@ -121,6 +121,9 @@ class VConsoleStorageTab extends VConsolePlugin {
       case 'sessionstorage':
         this.clearSessionStorageList();
         break;
+      case 'prefs':
+        this.clearPrefsStorageList();
+        break;
       default:
         return false;
     }
@@ -237,42 +240,26 @@ class VConsoleStorageTab extends VConsolePlugin {
       let list = [];
 
       //同步返回结果：
-      var _dataList = api.getPrefs({
-        sync: true,
-        key: '_dataList'
-      });
-
+      var _dataList = api.getPrefs({sync: true, key: '_dataList'});
       if (_dataList) {
         _dataList = JSON.parse(_dataList)
-
-
         for (var i = 0; i < _dataList.length; i++) {
           let name = _dataList[i];
-
-
           let _ret = api.getPrefs({sync: true, key: name});
           try {
             _ret = JSON.parse(_ret);
-
-
             list.push({
               name: name,
               value: _ret._value,
               expires: new Date(_ret._expires).toLocaleString()
             });
-
           } catch (e) {//如果不能解析为对象 说明可能是原始方式设置的数据
-
-
             list.push({
               name: name,
               value: _ret,
               expires: '原生设定'
             });
-
           }
-
-
         }
 
       }
@@ -321,6 +308,44 @@ class VConsoleStorageTab extends VConsolePlugin {
       }
     }
   }
+
+
+  clearPrefsStorageList() {
+    api.confirm({
+      title: '确认清除所有的偏好数据吗',
+      msg: '清除偏好数据是一个非常危险的操作,很多App运行需要依赖某些数据.请再次确认.清除完毕后将会重启App',
+      buttons: ['确定', '取消']
+    }, function (ret, err) {
+      let index = ret.buttonIndex;
+      if (index === 1) {
+        var _dataList = api.getPrefs({sync: true, key: '_dataList'});
+        if (_dataList) {
+          _dataList = JSON.parse(_dataList);
+          if (_dataList.length) {
+            for (var i = 0; i < _dataList.length; i++) {
+              api.removePrefs({
+                key: _dataList[i]
+              });
+            }
+
+            api.setPrefs({
+              key: '_dataList',
+              value: '[]'
+            });
+
+            setTimeout(() => {
+              api.rebootApp();
+            }, 1000)
+          } else {
+            alert('暂无数据,无需清除');
+          }
+        } else {
+          alert('暂无数据,清理失败');
+        }
+      }
+    });
+  }
+
 
 } // END Class
 
