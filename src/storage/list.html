@@ -6,7 +6,7 @@
   </dl>
   {{for (var i = 0; i < list.length; i++)}}
   <dl class="vc-table-row">
-    <dd class="vc-table-col">{{list[i].name}}</dd>
+    <dd class="vc-table-col" onclick=rmData("{{list[i].name}}",true)>{{list[i].name}}</dd>
     <dd class="vc-table-col vc-table-col-2" onclick=alert("{{list[i].value}}")>{{list[i].value}}</dd>
     <dd class="vc-table-col vc-table-col-2">{{list[i].expires}}</dd>
   </dl>

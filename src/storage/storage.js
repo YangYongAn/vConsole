@@ -106,10 +106,16 @@ class VConsoleStorageTab extends VConsolePlugin {
 
   clearLog() {
     if (this.currentType && window.confirm) {
-      let result = window.confirm('Remove all ' + this.typeNameMap[this.currentType] + '?');
-      if (!result) {
-        return false;
+      if (this.currentType === 'prefs') {
+        this.clearPrefsStorageList();
+      } else {
+        let result = window.confirm('Remove all ' + this.typeNameMap[this.currentType] + '?');
+        if (!result) {
+          return false;
+        }
       }
+
+
     }
     switch (this.currentType) {
       case 'cookies':
