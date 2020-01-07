@@ -11,7 +11,6 @@ vConsole For APICloud
 - Humanized log printing
 
 ![](./example/snapshot/20200107175844.jpg)
-![](./example/snapshot/20200107175838.jpg)
  
 
 

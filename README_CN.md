@@ -9,7 +9,6 @@ vConsole For APICloud
 
 
 ![](./example/snapshot/20200107175844.jpg)
-![](./example/snapshot/20200107175838.jpg)
 
 > 以下是源仓库说明
 
