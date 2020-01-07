@@ -1,5 +1,20 @@
 English | [简体中文](./README_CN.md)
 
+
+
+vConsole For APICloud 
+====
+
+- Support api.ajax request view
+- Prefs data viewing is supported
+- Support pageparam view
+- Humanized log printing
+
+![](./example/snapshot/20200107175844.jpg)
+![](./example/snapshot/20200107175838.jpg)
+ 
+
+
 vConsole
 ==============================
 [![npm version](https://badge.fury.io/js/vconsole.svg)](https://badge.fury.io/js/vconsole) 

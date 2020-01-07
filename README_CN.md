@@ -1,5 +1,18 @@
 [English](./README.md) | 简体中文
 
+vConsole For APICloud 
+====
+- 支持api.ajax请求查看
+- 支持Prefs数据查看
+- 支持pageParam查看
+- 人性化日志打印
+
+
+![](./example/snapshot/20200107175844.jpg)
+![](./example/snapshot/20200107175838.jpg)
+
+> 以下是源仓库说明
+
 vConsole
 ==============================
 [![npm version](https://badge.fury.io/js/vconsole.svg)](https://badge.fury.io/js/vconsole) 
